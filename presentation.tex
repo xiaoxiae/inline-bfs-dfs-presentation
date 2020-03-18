@@ -41,6 +41,8 @@
 % bullets
 \setbeamertemplate{itemize item}{$\bullet$}
 \setbeamertemplate{itemize subitem}{$\bullet$}
+\setbeamertemplate{itemize subsubitem}{$\bullet$}
+\setbeamercolor{itemize subsubitem}{fg=main}
 
 % code
 \usepackage{minted}
@@ -51,6 +53,9 @@
 	autogobble,
 	obeytabs=true,
 	tabsize=4}
+
+% tables
+\usepackage{booktabs}
 
 % ---
 
@@ -71,8 +76,8 @@
 			\begin{itemize}
 				\item paměť je pole slov velikosti $w$
 				\item operace se slovy (čtení, psaní, přístupy) jsou konstantní
-				\item vstup je na prvních $N \in \mathbb{N}$ slovech
-				\item velikost $w = \Omega\left(\log N\right)$
+				\item vstup je na prvních $n \in \mathbb{N}$ slovech
+				\item velikost $w = \Omega\left(\log n\right)$
 			\end{itemize}
 			\vfill
 			\item vstup \textit{může být měněn} v průběhu výpočtu, ale na jeho konci musí být v původním stavu
@@ -84,7 +89,7 @@
 	\end{frame}
 
 	\section{DFS}
-	\begin{frame}{Přehled}
+	\begin{frame}{Přehled BFS}
 		This is a simple frame.
 	\end{frame}
 
@@ -126,75 +131,92 @@
 		\end{proof}
 	\end{frame}
 
-	\subsection{Přehled}
-	\begin{frame}{setřízená $\rightarrow$ pointerová}
-		\begin{lemma}
-			Setříděná reprezentace jde do pointerové reprezentace převést in-place v čase $\mathcal{O}\left(n\right)$.
-		\end{lemma}
-
-		\begin{proof}
-			Nastavíme $A[i] = T\left[A\left[i\right]\right] \forall i \in \left\{n + 2, \ldots, n + m + 2\right\}$ a také $T\left[v\right] = v$ pro vrcholy $v$ stupně $0$.
-		\end{proof}
-	\end{frame}
-
 	\section{BFS}
 	\begin{frame}{Přehled}
-		\begin{itemize}
-			\item využijeme setřízenosti $T$ a zkomprimujeme jej na $\mathcal{T}$
+		\begin{enumerate}
+			\item $T$ zkomprimujeme na $\mathcal{T}$ s tím, že:
 			\begin{itemize}
-				\item uvolníme tím lineární počet bitů
 				\item zachováme konstantní přístup
+				\item uvolníme lineární počet bitů
 			\end{itemize}
-			\item ve volném místě vytvoříme color choice dictionary, ve kterém budeme ukládat barvy vrcholů
+			\item uvolněné místo použijeme na datovou strukturu pro ukládání stavů vrcholů
+			\item provedeme BFS
 			\item $\mathcal{T}$ dekomprimujeme na $T$
+		\end{enumerate}
+	\end{frame}
+
+	\begin{frame}{Color choice dictionary}
+		\begin{itemize}
+			\item zobecnění struktury choice dictionary
+			\item udřuje $S_0, \ldots, S_{c - 1}$ podmnožin $\left\{1, \ldots, n\right\}$, kde:
+
+				$$\bigcap_{i=0}^{c-1} S_i = \emptyset \qquad\bigcup_{i=0}^{c-1} S_i = \left\{1, \ldots, n\right\}$$
+
+			\item vyžaduje řádově $nc$ bitů paměti
 		\end{itemize}
+
+		\begin{table}
+			\centering
+			\begin{tabular}{llc}
+				\toprule
+				operace & význam & složitost \\
+				\midrule
+				\mintinline{python}{setColor(v, c)} & nastaví barvu $v$ na $c$        & $\mathcal{O}\left(1\right)$ \\
+				\mintinline{python}{getColor(v)}    & získá barvu $v$                 & $\mathcal{O}\left(1\right)$ \\
+				\mintinline{python}{choice(c)}      & získá libovolný $v$ s barvu $c$ & $\mathcal{O}\left(1\right)$ \\
+				\bottomrule
+			\end{tabular}
+			\caption{podporované operace CCD}
+			\label{tab:demo}
+		\end{table}
 	\end{frame}
 
 	\begin{frame}{Komprimace $T$}
 		\begin{itemize}
-			\item potřebujeme $nc$ bitů na uložení CCD~\cite{DBLP:journals/corr/abs-1809-07661}
+			\item potřebujeme uvolnit $nc$ bitů
 				\vfill
-			\item najdeme pozice, kde se mění $c + 1$ MSb ve slovech z $T$, budeme je považovat za nepoužitá
+			\item najdeme pozice, kde se mění $c + 1$ MSbitů ve slovech z $T$
 			\begin{itemize}
-				\item díky setřízenosti jich bude právě $2^{c - 1}$
+				\item díky setříděnosti jich bude právě $2^{c - 1}$
+				\item každé slovo o tolik bitů zkrátíme
+				\item zapamatujeme si pozice změn v $T$
 			\end{itemize}
-			\begin{block}{počet volných bitů}
-				\centering
-				$nw - n(w - (c + 1)) = n(c + 1) = nc + n$
-			\end{block}
-			\item omezení: $n \ge 2^{c + 1}w$, abychom mohli uložit pozice a $c + 1$
+				\vfill
+			\item dohromady $nw - n(w - (c + 1)) = n(c + 1) = nc + n$
+			\begin{itemize}
+				\item omezení: $n \ge 2^{c + 1}w$, abychom mohli uložit pozice a $c + 1$
+				\begin{itemize}
+					\item je ok, jelikož $w = \Omega\left(\log n\right)$
+				\end{itemize}
+			\end{itemize}
 		\end{itemize}
 
 		\fitimage[komprimovaná reprezentace $\mathcal{T}$]{images/compression.png}
 	\end{frame}
 
-	\begin{frame}{Získávání bitů z $\mathcal{T}$}
-		...
-	\end{frame}
-
-
-	\begin{frame}{Color choice dictionary}
-		\begin{itemize}
-			\item fdsa
-			\vfill
-			\item operace v konstantním čase~\cite{DBLP:journals/corr/abs-1809-07661}:
+	\begin{frame}{Získávání hodnot z $\mathcal{T}$}
+		\begin{enumerate}
+			\item bitovými operacemi získáme $w - (c + 1)$ LSbitů slova
 			\begin{itemize}
-				\item \texttt{setColor(v, c)} -- nastaví barvu $v$ na $c$
-				\item \texttt{getColor(v)} -- získá barvu $v$
-				\item \texttt{choice(c)} -- získá libovolný $v$ s barvu $c$
+				\item $i$-té slovo v $\mathcal{T}$ začíná na pozici $(w - (c + 1))(i - 1)$
 			\end{itemize}
-		\end{itemize}
+			\item procházíme postupně $2^{c - 1}$ pozic, podle kterých zrekonstruujeme $c + 1$ MSbitů
+		\end{enumerate}
+
+		% done like this because beamer uses \vfill to center stuff on the page
+		\vspace{\stretch{5}}
 	\end{frame}
+
 
 	\begin{frame}[fragile]{Průběh BFS}
 		\small
-		\begin{minted}{python}
+		\begin{minted}[xleftmargin=.08\textwidth]{python}
 			D = ColorChoiceDicrionary(WHITE, LIGHT, DARK, BLACK)
 			D.setColor(start, LIGHT)
 
 			while choice(LIGHT) is not None:
 				while choice(LIGHT) is not None:
-					v = D.choice(LIGHT)
+					v = D.choice(LIGHT)  # pop node
 
 					# open all white neighbours
 					for i in range(|$\mathcal{T}[v]$|, |$\mathcal{T}[v + 1]$|):
