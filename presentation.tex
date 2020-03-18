@@ -1,0 +1,220 @@
+% notes to myself:
+% - starred version (e.g. \section*{Section name}) disables the (sub)section page.
+
+\DeclareMathSizes{20}{20}{20}{20}
+
+\documentclass{beamer}
+
+\usetheme[nofirafonts]{focus}
+
+% shenanigans to allow UTF-8
+\usepackage{fontspec}
+
+\setsansfont{Fira Sans Book}[%
+	ItalicFont = {Fira Sans Book Italic},
+	BoldFont = {Fira Sans SemiBold},
+	BoldItalicFont = {Fira Sans SemiBold Italic}]
+
+\usefonttheme[onlymath]{serif}
+
+% shamelessly stolen from https://www.patrickbaylis.com/posts/2018-10-11-beamer-resizing/
+\usepackage{adjustbox}
+\makeatletter
+\newcommand{\fitimage}[2][\@nil]{
+	\begin{figure}
+		\begin{adjustbox}{width=0.9\textwidth, totalheight=\textheight-2\baselineskip-2\baselineskip,keepaspectratio}
+			\includegraphics{#2}
+		\end{adjustbox}
+		\def\tmp{#1}%
+	 \ifx\tmp\@nnil
+			\else
+			\caption{#1}
+		\fi
+	\end{figure}
+}
+\makeatother
+
+% translations
+\renewcommand{\figurename}{Diagram}
+\renewcommand*{\proofname}{Důkaz}
+
+% bullets
+\setbeamertemplate{itemize item}{$\bullet$}
+\setbeamertemplate{itemize subitem}{$\bullet$}
+
+% code
+\usepackage{minted}
+\setminted[python]{
+	linenos,
+	mathescape=true,
+	escapeinside=||,
+	autogobble,
+	obeytabs=true,
+	tabsize=4}
+
+% ---
+
+
+\title{In-place BFS a DFS}
+\subtitle{v lineárním čase na modelu RAM}
+\date{Tomáš Sláma \hfill 21. 11. 1999} % please don't judge me
+
+\begin{document}
+	\begin{frame}
+		\maketitle
+	\end{frame}
+	
+	\section{Úvod}
+	\begin{frame}{Předpoklady}
+		\begin{itemize}
+			\item pracujeme s modelem RAM
+			\begin{itemize}
+				\item paměť je pole slov velikosti $w$
+				\item operace se slovy (čtení, psaní, přístupy) jsou konstantní
+				\item vstup je na prvních $N \in \mathbb{N}$ slovech
+				\item velikost $w = \Omega\left(\log N\right)$
+			\end{itemize}
+			\vfill
+			\item vstup \textit{může být měněn} v průběhu výpočtu, ale na jeho konci musí být v původním stavu
+			\vfill
+			\item graf je zadán v setříděném seznamu sousedů
+		\end{itemize}
+
+		\fitimage[setřízená reprezentace]{images/sorted.png}
+	\end{frame}
+
+	\section{DFS}
+	\begin{frame}{Přehled}
+		This is a simple frame.
+	\end{frame}
+
+	\subsection{Reprezentace}
+	\begin{frame}{setřízená $\rightarrow$ pointerová}
+		\begin{lemma}
+			Setříděná reprezentace jde do pointerové reprezentace převést in-place v čase $\mathcal{O}\left(n\right)$.
+		\end{lemma}
+
+		\begin{proof}
+			Nastavíme $A[i] = T\left[A\left[i\right]\right] \forall i \in \left\{n + 2, \ldots, n + m + 2\right\}$ \\
+			a $T\left[v\right] = v$ (pro vrcholy $v$ stupně $0$).
+		\end{proof}
+	\end{frame}
+
+	\begin{frame}{pointerová $\longleftrightarrow$ prohozená}
+		\begin{lemma}
+			Pointerová jde do prohozené reprezentace (a zpět) převést in-place v čase $\mathcal{O}\left(n\right)$.
+		\end{lemma}
+
+		\begin{proof}
+			Převod $\rightarrow$: $$T[i] = A[T[i]]\ \text{a}\ A[T[i]] = i\quad \forall i \in \left\{1, \ldots, n\right\}, i \neq T[v]$$
+			Převod $\leftarrow$: $$T[A[i]] = i\ \text{a}\ A[i] = T[A[i]]\quad \forall i \in \left\{n + 2, \ldots, n + m + 2\right\}, A[i] < n$$
+		\end{proof}
+	\end{frame}
+
+	\begin{frame}{prohozená $\rightarrow$ setřízená}
+		\begin{lemma}
+			Prohozená jde do setřízené reprezentace převést in-place v čase $\mathcal{O}\left(n\right)$.
+		\end{lemma}
+
+		\begin{proof}
+			TODONejprve nastavíme $A[i] = A[A[i]]\ \forall i, A[i] > n, i !=$.
+			\vfill
+			Poté procházíme $A$ a prohazujeme ještě neprohozené vrcholy $v \in \left\{1, \ldots, n\right\}$ s pozicemi $p$ a nastavujeme $T[v] = p\ \text{a}\ A[p] = T[v]$
+			Poté opravíme vrcholy stupně $0$ tím, že 
+			$$T[i] = T[i - 1]\ \forall i \in \left\{1, \ldots, n\right\}, T[i] \le n$$
+
+		\end{proof}
+	\end{frame}
+
+	\subsection{Přehled}
+	\begin{frame}{setřízená $\rightarrow$ pointerová}
+		\begin{lemma}
+			Setříděná reprezentace jde do pointerové reprezentace převést in-place v čase $\mathcal{O}\left(n\right)$.
+		\end{lemma}
+
+		\begin{proof}
+			Nastavíme $A[i] = T\left[A\left[i\right]\right] \forall i \in \left\{n + 2, \ldots, n + m + 2\right\}$ a také $T\left[v\right] = v$ pro vrcholy $v$ stupně $0$.
+		\end{proof}
+	\end{frame}
+
+	\section{BFS}
+	\begin{frame}{Přehled}
+		\begin{itemize}
+			\item využijeme setřízenosti $T$ a zkomprimujeme jej na $\mathcal{T}$
+			\begin{itemize}
+				\item uvolníme tím lineární počet bitů
+				\item zachováme konstantní přístup
+			\end{itemize}
+			\item ve volném místě vytvoříme color choice dictionary, ve kterém budeme ukládat barvy vrcholů
+			\item $\mathcal{T}$ dekomprimujeme na $T$
+		\end{itemize}
+	\end{frame}
+
+	\begin{frame}{Komprimace $T$}
+		\begin{itemize}
+			\item potřebujeme $nc$ bitů na uložení CCD~\cite{DBLP:journals/corr/abs-1809-07661}
+				\vfill
+			\item najdeme pozice, kde se mění $c + 1$ MSb ve slovech z $T$, budeme je považovat za nepoužitá
+			\begin{itemize}
+				\item díky setřízenosti jich bude právě $2^{c - 1}$
+			\end{itemize}
+			\begin{block}{počet volných bitů}
+				\centering
+				$nw - n(w - (c + 1)) = n(c + 1) = nc + n$
+			\end{block}
+			\item omezení: $n \ge 2^{c + 1}w$, abychom mohli uložit pozice a $c + 1$
+		\end{itemize}
+
+		\fitimage[komprimovaná reprezentace $\mathcal{T}$]{images/compression.png}
+	\end{frame}
+
+	\begin{frame}{Získávání bitů z $\mathcal{T}$}
+		...
+	\end{frame}
+
+
+	\begin{frame}{Color choice dictionary}
+		\begin{itemize}
+			\item fdsa
+			\vfill
+			\item operace v konstantním čase~\cite{DBLP:journals/corr/abs-1809-07661}:
+			\begin{itemize}
+				\item \texttt{setColor(v, c)} -- nastaví barvu $v$ na $c$
+				\item \texttt{getColor(v)} -- získá barvu $v$
+				\item \texttt{choice(c)} -- získá libovolný $v$ s barvu $c$
+			\end{itemize}
+		\end{itemize}
+	\end{frame}
+
+	\begin{frame}[fragile]{Průběh BFS}
+		\small
+		\begin{minted}{python}
+			D = ColorChoiceDicrionary(WHITE, LIGHT, DARK, BLACK)
+			D.setColor(start, LIGHT)
+
+			while choice(LIGHT) is not None:
+				while choice(LIGHT) is not None:
+					v = D.choice(LIGHT)
+
+					# open all white neighbours
+					for i in range(|$\mathcal{T}[v]$|, |$\mathcal{T}[v + 1]$|):
+						if D.getColor(|$A[i]$|) is WHITE:
+							D.setColor(|$A[i]$|, DARK)
+
+					D.setColor(v, BLACK)  # close the node
+
+				LIGHT, DARK = DARK, LIGHT  # next round
+		\end{minted}
+	\end{frame}
+
+	\begin{frame}[focus]
+		Díky za pozornost!
+	\end{frame}
+	
+	\appendix
+	\begin{frame}{Zdroje}
+		\nocite{*}
+		\bibliography{presentation}
+		\bibliographystyle{plain}
+	\end{frame}
+\end{document}
