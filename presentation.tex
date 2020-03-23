@@ -97,11 +97,23 @@
 	\end{frame}
 
 	\section{DFS}
-	\begin{frame}{Přehled BFS}
-		This is a simple frame.
+	\begin{frame}{Přehled}
+		...
 	\end{frame}
 
-	\subsection{Reprezentace}
+	\begin{frame}{Reprezentace}
+		\begin{itemize}
+			\item udržování grafu v různých reprezentacích
+			\begin{itemize}
+				\item rychlé na některé věci, pomalé na jiné
+			\end{itemize}
+		\end{itemize}
+
+		\fitimage{images/sorted.png}
+		\fitimage{images/pointer.png}
+		\fitimage[setřízená, pointerová a prohozená reprezentace]{images/swapped.png}
+	\end{frame}
+
 	\begin{frame}{setřízená $\rightarrow$ pointerová}
 		\begin{lemma}
 			Setříděná reprezentace jde do pointerové reprezentace převést in-place v čase $\mathcal{O}\left(n\right)$.
