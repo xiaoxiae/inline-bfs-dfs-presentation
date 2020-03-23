@@ -36,7 +36,8 @@
 
 % translations
 \renewcommand{\figurename}{Diagram}
-\renewcommand*{\proofname}{Důkaz}
+\renewcommand{\tablename}{Tabulka}
+\renewcommand{\proofname}{Důkaz}
 
 % bullets
 \setbeamertemplate{itemize item}{$\bullet$}
@@ -56,6 +57,13 @@
 
 % tables
 \usepackage{booktabs}
+
+% number lemmas and theorems
+\setbeamertemplate{theorems}[numbered]
+
+\makeatletter
+\AtBeginEnvironment{proof}{\let\@addpunct\@gobble}
+\makeatother
 
 % ---
 
@@ -155,6 +163,8 @@
 			\item vyžaduje řádově $nc$ bitů paměti
 		\end{itemize}
 
+		\vfill
+
 		\begin{table}
 			\centering
 			\begin{tabular}{llc}
@@ -202,9 +212,6 @@
 			\end{itemize}
 			\item procházíme postupně $2^{c - 1}$ pozic, podle kterých zrekonstruujeme $c + 1$ MSbitů
 		\end{enumerate}
-
-		% done like this because beamer uses \vfill to center stuff on the page
-		\vspace{\stretch{5}}
 	\end{frame}
 
 
