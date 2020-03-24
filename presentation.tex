@@ -99,6 +99,27 @@
 		...
 	\end{frame}
 
+	\begin{frame}{Disclaimer}
+		\begin{itemize}
+			\item algoritmus všechny funkce podporovat nemůže
+		\end{itemize}
+
+		\begin{table}
+			\centering
+			\begin{tabular}{llc}
+				\toprule
+				\emph{operace} & \emph{význam} & \emph{podpora} \\
+				\midrule
+				\mintinline{python}{pre-process} & po vstoupení do vrcholu & $\checkmark$ \\
+				\mintinline{python}{pre-explore} & po iteraci přes souseda &  \\
+				\mintinline{python}{post-process} & po zpracovaní všech sousedů & $\checkmark$ \\
+				\mintinline{python}{post-explore} & po vrácení z vrcholu &  \\
+				\bottomrule
+			\end{tabular}
+			\caption{podporované funkce DFS}
+		\end{table}
+	\end{frame}
+
 	\begin{frame}{Reprezentace}
 		\begin{itemize}
 			\item udržování grafu v různých reprezentacích
