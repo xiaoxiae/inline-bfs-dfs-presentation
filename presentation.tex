@@ -159,13 +159,21 @@
 		\begin{lemma}
 			Prohozená jde do setřízené reprezentace převést in-place v čase $\mathcal{O}\left(n\right)$.
 		\end{lemma}
+	\end{frame}
 
+	\begin{frame}{prohozená $\rightarrow$ setřízená}
 		\begin{proof}
-			TODONejprve nastavíme $A[i] = A[A[i]]\ \forall i, A[i] > n, i !=$.
-			\vfill
-			Poté procházíme $A$ a prohazujeme ještě neprohozené vrcholy $v \in \left\{1, \ldots, n\right\}$ s pozicemi $p$ a nastavujeme $T[v] = p\ \text{a}\ A[p] = T[v]$
-			Poté opravíme vrcholy stupně $0$ tím, že 
-			$$T[i] = T[i - 1]\ \forall i \in \left\{1, \ldots, n\right\}, T[i] \le n$$
+			Nejprve nastavíme 
+			\begin{gather*}
+				A[i] = A[A[i]]\ \forall i \in \left\{n + 2, \ldots, n + m + 2\right\}, A[i] > n \\
+				\text{a} \\
+				T[i] = A[T[i]]\ \forall i \in \left\{1, \ldots, n\right\}
+			\end{gather*}
+
+			TODO: tady mají asi chybu
+
+			Poté opravíme vrcholy stupně $0$ procházením $T$ a nastavením
+			$$T[i] = T[i - 1]\ \forall i \in \left\{1, \ldots, n\right\}, T[i] = i$$
 
 		\end{proof}
 	\end{frame}
