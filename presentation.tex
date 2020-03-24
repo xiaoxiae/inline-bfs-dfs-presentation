@@ -1,8 +1,6 @@
 % notes to myself:
 % - starred version (e.g. \section*{Section name}) disables the (sub)section page.
 
-\DeclareMathSizes{20}{20}{20}{20}
-
 \documentclass{beamer}
 
 \usetheme[nofirafonts]{focus}
@@ -88,7 +86,7 @@
 				\item velikost $w = \Omega\left(\log n\right)$
 			\end{itemize}
 			\vfill
-			\item vstup \textit{může být měněn} v průběhu výpočtu, ale na jeho konci musí být v původním stavu
+			\item vstup může být měněn v průběhu výpočtu, ale na jeho konci musí být v původním stavu
 			\vfill
 			\item graf je zadán v setříděném seznamu sousedů
 		\end{itemize}
@@ -131,7 +129,7 @@
 		\end{lemma}
 
 		\begin{proof}
-			Převod $\rightarrow$: $$T[i] = A[T[i]]\ \text{a}\ A[T[i]] = i\quad \forall i \in \left\{1, \ldots, n\right\}, i \neq T[v]$$
+			Převod $\rightarrow$: $$T[i] = A[T[i]]\ \text{a}\ A[T[i]] = i\quad \forall i \in \left\{1, \ldots, n\right\}, i \neq T[i]$$
 			Převod $\leftarrow$: $$T[A[i]] = i\ \text{a}\ A[i] = T[A[i]]\quad \forall i \in \left\{n + 2, \ldots, n + m + 2\right\}, A[i] < n$$
 		\end{proof}
 	\end{frame}
@@ -189,7 +187,6 @@
 				\bottomrule
 			\end{tabular}
 			\caption{podporované operace CCD}
-			\label{tab:demo}
 		\end{table}
 	\end{frame}
 
@@ -207,9 +204,6 @@
 			\item dohromady $nw - n(w - (c + 1)) = n(c + 1) = nc + n$
 			\begin{itemize}
 				\item omezení: $n \ge 2^{c + 1}w$, abychom mohli uložit pozice a $c + 1$
-				\begin{itemize}
-					\item je ok, jelikož $w = \Omega\left(\log n\right)$
-				\end{itemize}
 			\end{itemize}
 		\end{itemize}
 
