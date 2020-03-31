@@ -1,19 +1,12 @@
 % notes to myself:
 % - starred version (e.g. \section*{Section name}) disables the (sub)section page.
 
-\documentclass{beamer}
+\documentclass[czech]{beamer}
+\usepackage{babel}
 
+% use the focus theme (without fira)
 \usetheme[nofirafonts]{focus}
-
-% shenanigans to allow UTF-8
-\usepackage{fontspec}
-
-\setsansfont{Fira Sans Book}[%
-	ItalicFont = {Fira Sans Book Italic},
-	BoldFont = {Fira Sans SemiBold},
-	BoldItalicFont = {Fira Sans SemiBold Italic}]
-
-\usefonttheme[onlymath]{serif}
+\usefonttheme{serif}
 
 % shamelessly stolen from https://www.patrickbaylis.com/posts/2018-10-11-beamer-resizing/
 \usepackage{adjustbox}
@@ -32,10 +25,7 @@
 }
 \makeatother
 
-% translations
-\renewcommand{\figurename}{Diagram}
-\renewcommand{\tablename}{Tabulka}
-\renewcommand{\proofname}{Důkaz}
+\setlength{\belowcaptionskip}{-5pt}
 
 % bullets
 \setbeamertemplate{itemize item}{$\bullet$}
@@ -63,7 +53,8 @@
 \AtBeginEnvironment{proof}{\let\@addpunct\@gobble}
 \makeatother
 
-% ---
+% translations
+\newtranslation[to=Czech]{Definition}{Definice}
 
 
 \title{In-place BFS a DFS}
