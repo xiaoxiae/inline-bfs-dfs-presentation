@@ -86,9 +86,6 @@
 	\end{frame}
 
 	\section{DFS}
-	\begin{frame}{Přehled}
-		...
-	\end{frame}
 
 	\begin{frame}{Disclaimer}
 		\begin{itemize}
@@ -112,13 +109,6 @@
 	\end{frame}
 
 	\begin{frame}{Reprezentace}
-		\begin{itemize}
-			\item udržování grafu v různých reprezentacích
-			\begin{itemize}
-				\item rychlé na některé věci, pomalé na jiné
-			\end{itemize}
-		\end{itemize}
-
 		\fitimage{images/sorted.png}
 		\fitimage{images/pointer.png}
 		\fitimage[setřízená, pointerová a prohozená reprezentace]{images/swapped.png}
@@ -142,7 +132,7 @@
 
 		\begin{proof}
 			Převod $\rightarrow$: $$T[i] = A[T[i]]\ \text{a}\ A[T[i]] = i\quad \forall i \in \left\{1, \ldots, n\right\}, i \neq T[i]$$
-			Převod $\leftarrow$: $$T[A[i]] = i\ \text{a}\ A[i] = T[A[i]]\quad \forall i \in \left\{n + 2, \ldots, n + m + 2\right\}, A[i] < n$$
+			Převod $\leftarrow$: $$T[A[i]] = i\ \text{a}\ T[A[i]] = i \quad \forall i \in \left\{n + 2, \ldots, n + m + 2\right\}, A[i] < n$$
 		\end{proof}
 	\end{frame}
 
@@ -153,7 +143,8 @@
 	\end{frame}
 
 	\begin{frame}{prohozená $\rightarrow$ setřízená}
-		\begin{proof}
+		\begin{proof}[Důkaz?]
+			\small
 			Nejprve nastavíme 
 			\begin{gather*}
 				A[i] = A[A[i]]\ \forall i \in \left\{n + 2, \ldots, n + m + 2\right\}, A[i] > n \\
@@ -310,7 +301,7 @@
 	\begin{frame}[fragile]{Průběh BFS}
 		\small
 		\begin{minted}[xleftmargin=.08\textwidth]{python}
-			D = ColorChoiceDicrionary(WHITE, LIGHT, DARK, BLACK)
+			D = ColorChoiceDictionary(WHITE, LIGHT, DARK, BLACK)
 			D.setColor(start, LIGHT)
 
 			while choice(LIGHT) is not None:
