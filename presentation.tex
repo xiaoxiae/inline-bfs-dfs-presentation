@@ -161,12 +161,78 @@
 				T[i] = A[T[i]]\ \forall i \in \left\{1, \ldots, n\right\}
 			\end{gather*}
 
-			TODO: tady mají asi chybu
+			Pak postupně hledáme jména vrcholů $v$ na pozicích $p$ v každém poli sousednosti a nastavujeme:
+			$$A[p] = T[v]\ \text{a}\ T\left[v\right] = p$$
 
-			Poté opravíme vrcholy stupně $0$ procházením $T$ a nastavením
+			Nakonec opravíme vrcholy stupně $0$ procházením $T$ a nastavením
 			$$T[i] = T[i - 1]\ \forall i \in \left\{1, \ldots, n\right\}, T[i] = i$$
-
 		\end{proof}
+	\end{frame}
+
+	\begin{frame}{prohozená $\rightarrow$ setřízená}
+		\begin{proof}[Důkaz!]
+			TODO
+		\end{proof}
+	\end{frame}
+
+	\begin{frame}{Přehled}
+		\begin{enumerate}
+			\item graf převedeme ze setřízené do prohozené reprezentace
+			\item budeme v ní ukládat aktuální stav DFS a trochu ji rozbijeme
+			\item obnovíme její původní stav
+			\item převedeme zpět do setřízené
+		\end{enumerate}
+	\end{frame}
+
+	\subsection{Vrcholy se stupněm $\ge 2$}
+
+	\begin{frame}{Zavedení invariantu}
+		\begin{block}{Invariant}
+			Vrchol $v$ je bílý $\iff A[T[v]] \le n$.
+		\end{block}
+		\begin{itemize}
+			\item stav vrcholů budeme udržovat přes invariant
+			\item na začátku platí pro všechny vrcholy
+		\end{itemize}
+		\vfill
+		\fitimage[prohozená reprezentace]{images/swapped.png}
+	\end{frame}
+
+	\begin{frame}{Procházení přes obrácené pointery}
+		\begin{itemize}
+			\item jsme ve vrcholu $u$ a iterujeme přes jeho sousedy
+			\item na pozici $p$ jsme narazili na pointer $q$ do bílého vrcholu $v$, jehož nejmenší soused je na pozici $q'$
+			\item nastavíme $T[v] = p$ a $A[p] = q'$
+		\end{itemize}
+		\fitimage[diagram konstrukce obráceného pointeru]{images/deg2.png}
+		\begin{itemize}
+			\item pozorování: vrchol $v$ už není bílý
+		\end{itemize}
+	\end{frame}
+
+	\begin{frame}{Problémy s obrácenými pointery}
+		\begin{itemize}
+			\item TODO
+		\end{itemize}
+	\end{frame}
+
+	\begin{frame}{Backtrackování}
+		\begin{itemize}
+			\item po prozkoumání všech vrcholů $v$ narazíme na vrchol $v''$
+			\item iterujeme zpět do té doby, dokud $A[q] > n$
+		\end{itemize}
+
+		\begin{figure}
+			\centering
+			\includegraphics{images/deg2-fix.png}
+			\caption{diagram konstrukce obráceného pointeru}
+		\end{figure}
+		\begin{itemize}
+			\item problém: vrchol $v$ už je zase bílý
+			\begin{itemize}
+				\item fix: $q' = q' + 1$ -- jelikož jsou stupně všech vrcholů $\ge 2$, tak po inkrementu $q'$ ukazuje na nějaký pointer
+			\end{itemize}
+		\end{itemize}
 	\end{frame}
 
 	\section{BFS}
