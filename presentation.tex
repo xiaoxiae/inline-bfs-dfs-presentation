@@ -4,6 +4,8 @@
 \documentclass[czech]{beamer}
 \usepackage{babel}
 
+\usepackage{fontawesome5}
+
 % use the focus theme (without fira)
 \usetheme[nofirafonts]{focus}
 \usefonttheme{serif}
@@ -25,7 +27,7 @@
 }
 \makeatother
 
-\setlength{\belowcaptionskip}{-5pt}
+\setlength{\belowcaptionskip}{-7pt}
 
 % bullets
 \setbeamertemplate{itemize item}{$\bullet$}
@@ -42,6 +44,9 @@
 	autogobble,
 	obeytabs=true,
 	tabsize=4}
+
+% strikethrough
+\usepackage{soul}
 
 % tables
 \usepackage{booktabs}
@@ -77,7 +82,7 @@
 				\item velikost $w = \Omega\left(\log n\right)$
 			\end{itemize}
 			\vfill
-			\item vstup může být měněn v průběhu výpočtu, ale na jeho konci musí být v původním stavu
+			\item \textbf{restore model:} vstup může být měněn v průběhu výpočtu, ale na jeho konci musí být v původním stavu
 			\vfill
 			\item graf je zadán v setříděném seznamu sousedů
 		\end{itemize}
@@ -86,6 +91,15 @@
 	\end{frame}
 
 	\section{DFS}
+
+	\begin{frame}{Přehled}
+		\begin{enumerate}
+			\item graf převedeme ze setřízené do prohozené reprezentace
+			\item budeme v ní kódovat stav DFS a trochu ji tím rozbijeme
+			\item obnovíme původní stav (před rozbitím)
+			\item převedeme zpět do setřízené reprezentace
+		\end{enumerate}
+	\end{frame}
 
 	\begin{frame}{Disclaimer}
 		\begin{itemize}
@@ -166,15 +180,6 @@
 		\end{proof}
 	\end{frame}
 
-	\begin{frame}{Přehled}
-		\begin{enumerate}
-			\item graf převedeme ze setřízené do prohozené reprezentace
-			\item budeme v ní ukládat aktuální stav DFS a trochu ji rozbijeme
-			\item obnovíme její původní stav
-			\item převedeme zpět do setřízené
-		\end{enumerate}
-	\end{frame}
-
 	\subsection{Vrcholy se stupněm $\ge 2$}
 
 	\begin{frame}{Zavedení invariantu}
@@ -203,8 +208,19 @@
 
 	\begin{frame}{Problémy s obrácenými pointery}
 		\begin{itemize}
-			\item TODO
+			\item na pozici $p$ uvažujeme první hranu vrcholu $u$ (uložená na $A[T[u]]$) směřující do $v$: kam nasměrovat obrácený pointer?
+			\begin{enumerate}
+				\item uložit do $A[p]$ -- ztratíme pojem o tom, kde $u$ začíná
+				\item uložit do $T[u]$ -- tam už je obrácený pointer
+			\end{enumerate}
+			\item problém vyřešíme tím, že ho nebudeme řešit:
+			\begin{itemize}
+				\item pokud by měl nastat, tak prohodíme $T[u]$ s $A[p + 1]$
+				\item jelikož jsou pointery setřízené, tak prohození poznáme
+			\end{itemize}
+			\vfill
 		\end{itemize}
+		\fitimage[problémy a řešení konstrukce prohozeného pointeru]{images/reverse-pointer-problems.png}
 	\end{frame}
 
 	\begin{frame}{Backtrackování}
@@ -216,7 +232,7 @@
 		\begin{figure}
 			\centering
 			\includegraphics{images/deg2-fix.png}
-			\caption{diagram konstrukce obráceného pointeru}
+			\caption{backtrackování}
 		\end{figure}
 		\begin{itemize}
 			\item problém: vrchol $v$ už je zase bílý
@@ -224,6 +240,61 @@
 				\item fix: $q' = q' + 1$ -- jelikož jsou stupně všech vrcholů $\ge 2$, tak po inkrementu $q'$ ukazuje na nějaký pointer
 			\end{itemize}
 		\end{itemize}
+	\end{frame}
+		
+	\subsection{Průběh algoritmu}
+
+	\begin{frame}{Invarianty před a po follow/backtrack}
+		\begin{enumerate}
+				\item Vrchol $v$ je bílý $\iff$ není startovní a $1 \le A[T[v]] \le n$
+				\item Každý šedočerný vrchol (kromě startovního) na aktuální DFS cestě si ukládá obrácený pointer na pozici $T[v]$, která ukazuje, kde byl pointer na $v$ původně uložen v poli sousednosti svého rodiče.
+				\item První pointer aktuálně neprocházeného šedočerného vrcholu $v$ (uložený v $T[v]$), ukazuje na druhou pozici pole sousedů nějakého vrcholu.
+		\end{enumerate}
+	\end{frame}
+
+	\begin{frame}{\st{Pseudokód} Python}
+		\begin{center}
+			\href{run:presentation.py}{\faPython\ presentation.py} 
+		\end{center}
+	\end{frame}
+
+	\subsection{Vrcholy se stupněm $0$}
+
+	\begin{frame}{Rozšíření invariantu}
+		\begin{block}{Invariant}
+			Vrchol $v$ je bílý $\iff A[T[v]] \le n \land T\left[v\right]$.
+		\end{block}
+		\vfill
+		\begin{columns}
+			\column{0.5\textwidth}
+				\begin{itemize}
+					\item vytvoříme obrácený pointer
+					\begin{itemize}
+						\item $v$ přestane být bílý
+						\item uklidíme po sobě později
+					\end{itemize}
+				\end{itemize}
+				\fitimage{images/deg0-2.png}
+			\column{0.5\textwidth}
+				\begin{itemize}
+					\item $u$ má jen jednoho souseda
+					\begin{itemize}
+						\item nastavíme $T[v] = A[p]$
+						\item TODO
+					\end{itemize}
+				\end{itemize}
+				\fitimage{images/deg0-1.png}
+				\vfill
+		\end{columns}
+	\end{frame}
+
+	\subsection{Vrcholy se stupněm $1$}
+	\begin{frame}
+		\begin{itemize}
+			\item jsme v $u$ na pozici $p$ a objevili jsme bílý $v$ stupně $1$
+			\item chceme ho navštívit, ale kam uložíme obrácený pointer?
+		\end{itemize}
+		\fitimage{images/deg1.png}
 	\end{frame}
 
 	\section{BFS}
