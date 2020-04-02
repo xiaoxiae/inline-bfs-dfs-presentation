@@ -22,3 +22,6 @@ _minted*
 # The files from the beamer theme that I'm using
 # https://github.com/elauksap/focus-beamertheme
 beamer*
+
+# Other
+*.svg
