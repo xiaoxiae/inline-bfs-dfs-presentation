@@ -1,4 +1,4 @@
-% notes to myself:
+
 % - starred version (e.g. \section*{Section name}) disables the (sub)section page.
 
 \documentclass[czech]{beamer}
@@ -94,18 +94,14 @@
 
 	\begin{frame}{Přehled}
 		\begin{enumerate}
-			\item graf převedeme ze setřízené do prohozené reprezentace
-			\item budeme v ní kódovat stav DFS a trochu ji tím rozbijeme
-			\item obnovíme původní stav (před rozbitím)
+			\item graf převedeme do speciální reprezentace
+			\item budeme v ní kódovat stav DFS (a trochu ji tím rozbijeme)
+			\item obnovíme původní stav
 			\item převedeme zpět do setřízené reprezentace
 		\end{enumerate}
 	\end{frame}
 
 	\begin{frame}{Disclaimer}
-		\begin{itemize}
-			\item algoritmus všechny funkce podporovat nemůže
-		\end{itemize}
-
 		\begin{table}
 			\centering
 			\begin{tabular}{llc}
@@ -126,6 +122,9 @@
 		\fitimage{images/sorted.png}
 		\fitimage{images/pointer.png}
 		\fitimage[setřízená, pointerová a prohozená reprezentace]{images/swapped.png}
+		\begin{itemize}
+			\item pozor na stupně $0$ (zachovávají si jména vrcholů)!
+		\end{itemize}
 	\end{frame}
 
 	\begin{frame}{setřízená $\rightarrow$ pointerová}
@@ -225,8 +224,11 @@
 
 	\begin{frame}{Backtrackování}
 		\begin{itemize}
-			\item po prozkoumání všech vrcholů $v$ narazíme na vrchol $v''$
-			\item iterujeme zpět do té doby, dokud $A[q] > n$
+			\item po prozkoumání sousedů $v$ narazíme na pozici $q''$ na vrchol $v''$
+			\begin{itemize}
+				\item poznáme tak, že $A[q''] \le n$
+			\end{itemize}
+			\item iterujeme zpět do té doby, než $A[p] \le n$
 		\end{itemize}
 
 		\begin{figure}
@@ -262,39 +264,70 @@
 
 	\begin{frame}{Rozšíření invariantu}
 		\begin{block}{Invariant}
-			Vrchol $v$ je bílý $\iff A[T[v]] \le n \land T\left[v\right]$.
+			Vrchol $v$ je bílý $\iff A[T[v]] \le n \lor T\left[v\right] = v$.
 		\end{block}
-		\vfill
-		\begin{columns}
-			\column{0.5\textwidth}
+		\begin{minipage}[t]{0.5\textwidth}
+				\vspace{0pt}
 				\begin{itemize}
-					\item vytvoříme obrácený pointer
-					\begin{itemize}
-						\item $v$ přestane být bílý
-						\item uklidíme po sobě později
-					\end{itemize}
+					\item chováme se normálně
 				\end{itemize}
 				\fitimage{images/deg0-2.png}
-			\column{0.5\textwidth}
-				\begin{itemize}
-					\item $u$ má jen jednoho souseda
-					\begin{itemize}
-						\item nastavíme $T[v] = A[p]$
-						\item TODO
-					\end{itemize}
-				\end{itemize}
-				\fitimage{images/deg0-1.png}
-				\vfill
-		\end{columns}
+		\end{minipage}%
+		\hfill
+		\begin{minipage}[t]{0.5\textwidth}
+			\vspace{0pt}
+			\begin{itemize}
+				\item vytvoříme pointer do $T[u]$
+			\end{itemize}
+			\fitimage{images/deg0-1.png}
+		\end{minipage}
+		\vfill
+		\begin{itemize}
+			\item na rozdíl od vrcholů stupně $2$ po sobě neuklízíme
+			\begin{itemize}
+				\item vlastně vytváříme smyčky (bude se hodit při obnovení)
+			\end{itemize}
+		\end{itemize}
 	\end{frame}
 
 	\subsection{Vrcholy se stupněm $1$}
-	\begin{frame}
+	\begin{frame}{Dokončení invariantu}
+		\begin{block}{Invariant}
+			Vrchol $v$ je bílý $\iff (\underbrace{T\left[v\right] = v}_{\text{stupeň}\ 0} \lor \underbrace{T[v] > n}_{\text{stupeň}\ 1}) \land \underbrace{A[T[v]] \le n}_{\text{stupeň}\ \ge2}$.
+		\end{block}
+		\vfill
 		\begin{itemize}
-			\item jsme v $u$ na pozici $p$ a objevili jsme bílý $v$ stupně $1$
-			\item chceme ho navštívit, ale kam uložíme obrácený pointer?
+			\item z vrcholu $u$ stupně $\ge 2$ navštívíme bílý vrchol $v$ stupně $1$
+			\item podle stupně jediného souseda $v'$ vrcholu $v$ se chováme různě:
+			\begin{enumerate}
+				\item[0)] jako jsme popisovali výše
+				\item[1)] nastavíme $T[v'] = v$ a pokračujeme
+				\item[$\ge 2$)] nastavíme $A[\overline{p}] = T[v'']$ a $T[v''] = v'$
+			\end{enumerate}
 		\end{itemize}
 		\fitimage{images/deg1.png}
+	\end{frame}
+
+	\subsection{Obnovení}
+	\begin{frame}{Obnovení}
+
+		\begin{enumerate}
+			\item[$\ge 2$)] stačí nastavit $T[v] = T[v] - 1$
+			\item[0)] tvoří smyčku, nebo ukazuje na druhou pozici pole sousednosti
+			\begin{itemize}
+				\item iterujeme přes pole sousednosti a hledáme $v = A[p]: v \le n$
+				\item stačí otestovat, že alespoň jedno z následujících platí:
+				\begin{itemize}
+					\item $T[v] = p$ (smyčka)
+					\item $u = A[p] \land T[v] = p + 1$ (pro $u$ jako začátek TODO!
+					\item $A[T[v]] \le n$ (vrchol stupně $0$)
+				\end{itemize}
+			\end{itemize}
+			\item[1)] postupně nacházíme TODO
+			\begin{itemize}
+				\item TODO že to neopraví úplně ale nevadí to
+			\end{itemize}
+		\end{enumerate}
 	\end{frame}
 
 	\section{BFS}
