@@ -156,7 +156,7 @@
 	\end{frame}
 
 	\begin{frame}{prohozená $\rightarrow$ setřízená}
-		\begin{proof}[Důkaz?]
+		\begin{proof}[Důkaz]
 			\small
 			Nejprve nastavíme 
 			\begin{gather*}
@@ -174,8 +174,12 @@
 	\end{frame}
 
 	\begin{frame}{prohozená $\rightarrow$ setřízená}
-		\begin{proof}[Důkaz!]
-			TODO
+	\begin{itemize}
+			\item důkaz z článku je problematický\footnote{Pokud jsem ho tedy pochopil správně :).}, jelikož nepoznáme, když procházíme nové pole sousednosti
+		\end{itemize}
+		\fitimage[problematický případ]{images/sorted-pointer-problem.png}
+		\begin{proof}[Důkaz (fix)]
+			Při nalezení chybného prohození iterujeme o rozdíl správného $v$ s aktuálním a prohazujeme zpět.
 		\end{proof}
 	\end{frame}
 
