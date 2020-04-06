@@ -1,4 +1,3 @@
-
 % - starred version (e.g. \section*{Section name}) disables the (sub)section page.
 
 \documentclass[czech]{beamer}
@@ -297,7 +296,7 @@
 	\subsection{Vrcholy se stupněm $1$}
 	\begin{frame}{Dokončení invariantu}
 		\begin{block}{Invariant}
-			Vrchol $v$ je bílý $\iff (\underbrace{T\left[v\right] = v}_{\text{stupeň}\ 0} \lor \underbrace{T[v] > n}_{\text{stupeň}\ 1}) \land \underbrace{A[T[v]] \le n}_{\text{stupeň}\ \ge2}$.
+			Vrchol $v$ je bílý $\iff (\underbrace{T\left[v\right] = v}_{\text{stupeň}\ 0} \lor \underbrace{T[v] > n}_{\text{stupeň}\ 1, 2}) \land \underbrace{A[T[v]] \le n}_{\text{stupeň}\ \ge2}$.
 		\end{block}
 		\vfill
 		\begin{itemize}
@@ -314,29 +313,31 @@
 
 	\subsection{Obnovení}
 	\begin{frame}{Obnovení}
-
-		\begin{enumerate}
-			\item[$\ge 2$)] stačí nastavit $T[v] = T[v] - 1$
-			\item[0)] tvoří smyčku, nebo ukazuje na druhou pozici pole sousednosti
-			\begin{itemize}
-				\item iterujeme přes pole sousednosti a hledáme $v = A[p]: v \le n$
-				\item stačí otestovat, že alespoň jedno z následujících platí:
+		\hfill
+		\begin{minipage}[t]{0.97\textwidth}
+			\begin{enumerate}
+				\item[$\ge 2$)] stačí nastavit $T[v] = T[v] - 1$
+				\item[0)] tvoří smyčku, nebo ukazuje na druhou pozici vrcholu:
 				\begin{itemize}
-					\item $T[v] = p$ (smyčka)
-					\item $u = A[p] \land T[v] = p + 1$ (pro $u$ jako začátek TODO!
-					\item $A[T[v]] \le n$ (vrchol stupně $0$)
+					\item iterujeme přes pole sousednosti a hledáme $v = A[p]: v \le n$:
+					\begin{itemize}
+						\item $T[v] = p$ (smyčka, stupeň $2$)
+						\item $T[v] \le n \land T[T[v]] = p + 1$ (prohozený $1$ a $2$ vrchol, stupeň $2$)
+						\item $T[v] \le n \land T[T[v]] = v$ (stupeň $1$)
+					\end{itemize}
 				\end{itemize}
-			\end{itemize}
-			\item[1)] postupně nacházíme TODO
-			\begin{itemize}
-				\item TODO že to neopraví úplně ale nevadí to
-			\end{itemize}
-		\end{enumerate}
+				\item[1)] postupně hledáme vrcholy $v'$ stupně $1$
+				\begin{itemize}
+					\item pokud ještě nebyly opraveny, obracíme prohozené pointery
+				\end{itemize}
+			\end{enumerate}
+		\end{minipage}
 	\end{frame}
 
 	\section{BFS}
 	\begin{frame}{Přehled}
 		\begin{enumerate}
+			\item graf získáme v setřízené reprezentaci
 			\item $T$ zkomprimujeme na $\mathcal{T}$ s tím, že:
 			\begin{itemize}
 				\item zachováme konstantní přístup
@@ -344,7 +345,7 @@
 			\end{itemize}
 			\item uvolněné místo použijeme na datovou strukturu pro ukládání stavů vrcholů
 			\item provedeme BFS
-			\item $\mathcal{T}$ dekomprimujeme na $T$
+			\item $\mathcal{T}$ dekomprimujeme na $T$, čímž obnovíme původní stav
 		\end{enumerate}
 	\end{frame}
 
@@ -388,7 +389,7 @@
 				\vfill
 			\item dohromady $nw - n(w - (c + 1)) = n(c + 1) = nc + n$
 			\begin{itemize}
-				\item omezení: $n \ge 2^{c + 1}w$, abychom mohli uložit pozice a $c + 1$
+				\item omezení: $n \ge 2^{c - 1}w$, abychom mohli uložit pozice
 			\end{itemize}
 		\end{itemize}
 
