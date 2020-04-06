@@ -18,6 +18,7 @@ _minted*
 
 # Binary files
 *.pdf
+*.xopp*
 
 # The files from the beamer theme that I'm using
 # https://github.com/elauksap/focus-beamertheme

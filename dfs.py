@@ -41,13 +41,12 @@ def pointer_to_swapped():
 def swapped_to_sorted():
     """Převede prohozenou na setřízenou."""
     # TODO
-    # nahrazení všech ukazatelů labely, na které to ukazuje
     for i in range(1, m + n + 1):
         if A[i] > n and i != n + 1:
             A[i] = A[A[i]]
 
     v = 1
-    for i in range(n + 2, m + n + 2):
+    for i in range(n + 2, n + m + 2):
         # if i != n + 2 and A[i] < prev_A_i:
         #    for bad_v in range(A[i], v):
         #        A[T[bad_v]] = bad_v
@@ -55,26 +54,26 @@ def swapped_to_sorted():
         #        A[tmp] = bad_v
         #        v -= 1
 
-        # prev_A_i = A[i]
-
-        # replace greedily
+        # greedily replace everything we can
         if A[i] == v:
             A[i], T[v] = T[v], i
-            pprint()
             v += 1
+
+        # prev_A_i = A[i]
 
         # fix possible mistakes
 
     # stupeň 0
+    for v in range(1, n + 1):
+        if T[v] == v:
+            T[v] = T[v - 1] if v != 1 else 0
 
 
-# převody reprezentací
-pprint()
+# setřízená -> prohozená
 sorted_to_pointer()
-pprint()
 pointer_to_swapped()
-pprint()
-
+swapped_to_sorted()  # TODO remove
+quit()
 
 v_s = int(input("v_s = "))
 
@@ -194,3 +193,6 @@ def backtrack(q):
 for p in range(n + 2, m + n + 2):
     if A[p] == v_s:
         visit(p)
+
+# prohozená -> setřízená
+swapped_to_sorted()
