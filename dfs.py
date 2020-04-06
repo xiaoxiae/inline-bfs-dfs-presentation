@@ -26,7 +26,7 @@ def pprint():
 
 
 def sorted_to_pointer():
-    """Převede setřízenou na pointerovou reprezentaci."""
+    """Převede setříděnou na pointerovou reprezentaci."""
     for i in range(n + 2, m + n + 2):
         A[i] = T[A[i]]
 
@@ -39,41 +39,13 @@ def pointer_to_swapped():
 
 
 def swapped_to_sorted():
-    """Převede prohozenou na setřízenou."""
-    # TODO
-    for i in range(1, m + n + 1):
-        if A[i] > n and i != n + 1:
-            A[i] = A[A[i]]
-
-    v = 1
-    for i in range(n + 2, n + m + 2):
-        # if i != n + 2 and A[i] < prev_A_i:
-        #    for bad_v in range(A[i], v):
-        #        A[T[bad_v]] = bad_v
-        #        T[bad_v] = A[T[bad_v]]
-        #        A[tmp] = bad_v
-        #        v -= 1
-
-        # greedily replace everything we can
-        if A[i] == v:
-            A[i], T[v] = T[v], i
-            v += 1
-
-        # prev_A_i = A[i]
-
-        # fix possible mistakes
-
-    # stupeň 0
-    for v in range(1, n + 1):
-        if T[v] == v:
-            T[v] = T[v - 1] if v != 1 else 0
+    """Převede prohozenou na setříděnou."""
+    # TODO do budoucna
 
 
-# setřízená -> prohozená
+# setříděná -> prohozená
 sorted_to_pointer()
 pointer_to_swapped()
-swapped_to_sorted()  # TODO remove
-quit()
 
 v_s = int(input("v_s = "))
 
@@ -89,7 +61,7 @@ def postprocess(v):
 
 
 def iterate_backwards(p):
-    """Iterujeme zpět, dokuď nenarazíme na start pole sousednosti vrcholu."""
+    """Iterujeme zpět, dokud nenarazíme na start pole sousednosti vrcholu."""
     return p if A[p] <= n else iterate_backwards(p - 1)
 
 
@@ -154,7 +126,7 @@ def nextNeighbor(p, is_first):
 
 
 def isWhite(v):
-    """Vrátí true, pokud je v bílý (otestuje invariant + začátek)."""
+    """Vrátí True, pokud je v bílý (otestuje invariant + začátek)."""
     return (v != v_s) and (1 <= A[T[v]] <= n)
 
 
@@ -178,7 +150,7 @@ def follow(p):
 def backtrack(q):
     """Backtrackuj z pozice q vrcholu A[q]."""
     v = A[q]  # jméno vrcholu, ze kterého backtrackujeme
-    p = T[v]  # orácený pointer z v do předchůdce
+    p = T[v]  # obrácený pointer z v do předchůdce
 
     # revertnutí obráceného pointeru
     T[v] = A[p] + 1  # invariant 3
@@ -194,5 +166,5 @@ for p in range(n + 2, m + n + 2):
     if A[p] == v_s:
         visit(p)
 
-# prohozená -> setřízená
+# prohozená -> setříděná
 swapped_to_sorted()

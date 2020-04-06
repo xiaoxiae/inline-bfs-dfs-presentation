@@ -79,10 +79,8 @@
 				\item operace se slovy (čtení, psaní, přístupy) jsou konstantní
 				\item vstup je na prvních $n \in \mathbb{N}$ slovech
 				\item velikost $w = \Omega\left(\log n\right)$
+				\item restore model: vstup může být měněn v průběhu výpočtu, ale na jeho konci musí být v původním stavu
 			\end{itemize}
-			\vfill
-			\item \textbf{restore model:} vstup může být měněn v průběhu výpočtu, ale na jeho konci musí být v původním stavu
-			\vfill
 			\item graf je zadán v setříděném seznamu sousedů
 		\end{itemize}
 
@@ -222,7 +220,7 @@
 			\end{itemize}
 			\vfill
 		\end{itemize}
-		\fitimage[problémy a řešení konstrukce prohozeného pointeru]{images/reverse-pointer-problems.png}
+		\fitimage[problémy a řešení konstrukce obráceného pointeru]{images/reverse-pointer-problems.png}
 	\end{frame}
 
 	\begin{frame}{Backtrackování}
@@ -233,16 +231,17 @@
 			\end{itemize}
 			\item iterujeme zpět do té doby, než $A[p] \le n$
 		\end{itemize}
-
 		\begin{figure}
 			\centering
 			\includegraphics{images/deg2-fix.png}
-			\caption{backtrackování}
+			\caption{backtrackování přes obrácený pointer}
 		\end{figure}
+		\vfill
+
 		\begin{itemize}
-			\item problém: vrchol $v$ už je zase bílý
+			\item vrchol $v$ už je zase bílý -- vyřešíme nastavením $q' = q' + 1$
 			\begin{itemize}
-				\item fix: $q' = q' + 1$ -- jelikož jsou stupně všech vrcholů $\ge 2$, tak po inkrementu $q'$ ukazuje na nějaký pointer
+				\item stupně všech vrcholů jsou $\ge 2$, $q'$ ukazuje na  pointer
 			\end{itemize}
 		\end{itemize}
 	\end{frame}
@@ -251,7 +250,7 @@
 
 	\begin{frame}{Invarianty před a po follow/backtrack}
 		\begin{enumerate}
-				\item Vrchol $v$ je bílý $\iff$ není startovní a $1 \le A[T[v]] \le n$
+				\item Vrchol $v$ je bílý $\iff$ není startovní a $1 \le A[T[v]] \le n$.
 				\item Každý šedočerný vrchol (kromě startovního) na aktuální DFS cestě si ukládá obrácený pointer na pozici $T[v]$, která ukazuje, kde byl pointer na $v$ původně uložen v poli sousednosti svého rodiče.
 				\item První pointer aktuálně neprocházeného šedočerného vrcholu $v$ (uložený v $T[v]$), ukazuje na druhou pozici pole sousedů nějakého vrcholu.
 		\end{enumerate}
@@ -296,7 +295,7 @@
 	\subsection{Vrcholy se stupněm $1$}
 	\begin{frame}{Dokončení invariantu}
 		\begin{block}{Invariant}
-			Vrchol $v$ je bílý $\iff (\underbrace{T\left[v\right] = v}_{\text{stupeň}\ 0} \lor \underbrace{T[v] > n}_{\text{stupeň}\ 1, 2}) \land \underbrace{A[T[v]] \le n}_{\text{stupeň}\ \ge2}$.
+			Vrchol $v$ je bílý $\iff (\underbrace{T\left[v\right] = v}_{\text{stupeň}\ 0} \lor \underbrace{T[v] > n}_{\text{stupeň}\ 1\ \text{a}\ 2}) \land \underbrace{A[T[v]] \le n}_{\text{stupeň}\ \ge2}$.
 		\end{block}
 		\vfill
 		\begin{itemize}
@@ -328,7 +327,7 @@
 				\end{itemize}
 				\item[1)] postupně hledáme vrcholy $v'$ stupně $1$
 				\begin{itemize}
-					\item pokud ještě nebyly opraveny, obracíme psource and resultrohozené pointery
+					\item pokud ještě nebyly opraveny, obracíme prohozené pointery
 				\end{itemize}
 			\end{enumerate}
 		\end{minipage}
@@ -352,7 +351,7 @@
 	\begin{frame}{Color choice dictionary}
 		\begin{itemize}
 			\item zobecnění struktury choice dictionary
-			\item udřuje $S_0, \ldots, S_{c - 1}$ podmnožin $\left\{1, \ldots, n\right\}$, kde:
+			\item udržuje $S_0, \ldots, S_{c - 1}$ podmnožin $\left\{1, \ldots, n\right\}$, kde:
 
 				$$\bigcap_{i=0}^{c-1} S_i = \emptyset \qquad\bigcup_{i=0}^{c-1} S_i = \left\{1, \ldots, n\right\}$$
 
