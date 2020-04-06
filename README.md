@@ -1,7 +1,7 @@
-# Linear-Time In-Place DFS and BFS on the Word RAM presentation
-The source code to the presentation about [this paper](https://arxiv.org/abs/1803.04282) about an in-place BFS and DFS. In this repository, you will find:
+# Prezentace článku 'Linear-Time In-Place DFS and BFS on the Word RAM'
+Zdrojový kód a Python implementace [článku](https://arxiv.org/abs/1803.04282) o in-place BFS a DFS na RAMu. Obsah repozitáře je následující:
 
-- `presentation.*`: presentation-related files
-- `dfs.py`: imlementation of the in-place DFS algorithm in Python (for graphs with vertices of degree >= 2)
-- `paper.pdf`: the PDF of the original paper
+- `presentation.*` a `images`: soubory prezentace
+- `dfs.py`: implementace in-place DFS algoritmu v Pythonu (pro grafy s vrcholy se stupni >= 2)
+- `paper.pdf`: PDF článku
 
