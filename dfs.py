@@ -165,6 +165,3 @@ def backtrack(q):
 for p in range(n + 2, m + n + 2):
     if A[p] == v_s:
         visit(p)
-
-# prohozená -> setříděná
-swapped_to_sorted()

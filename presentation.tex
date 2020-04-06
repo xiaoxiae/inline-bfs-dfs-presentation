@@ -166,7 +166,7 @@
 			$$A[p] = T[v]\ \text{a}\ T\left[v\right] = p$$
 
 			Nakonec opravíme vrcholy stupně $0$ procházením $T$ a nastavením
-			$$T[i] = T[i - 1]\ \forall i \in \left\{1, \ldots, n\right\}, T[i] = i$$
+			$$T[i] = T[i + 1]\ \forall i \in \left\{1, \ldots, n\right\}, T[i] = i$$
 		\end{proof}
 	\end{frame}
 
@@ -233,7 +233,7 @@
 		\end{itemize}
 		\begin{figure}
 			\centering
-			\includegraphics{images/deg2-fix.png}
+			\includegraphics{images/backtracking.png}
 			\caption{backtrackování přes obrácený pointer}
 		\end{figure}
 		\vfill
@@ -325,7 +325,7 @@
 						\item $T[v] \le n \land T[T[v]] = v$ (stupeň $1$)
 					\end{itemize}
 				\end{itemize}
-				\item[1)] postupně hledáme vrcholy $v'$ stupně $1$
+				\item[1)] postupně hledáme vrcholy stupně $1$
 				\begin{itemize}
 					\item pokud ještě nebyly opraveny, obracíme prohozené pointery
 				\end{itemize}
@@ -378,18 +378,13 @@
 	\begin{frame}{Komprimace $T$}
 		\begin{itemize}
 			\item potřebujeme uvolnit $nc$ bitů
-				\vfill
 			\item najdeme pozice, kde se mění $c + 1$ MSbitů ve slovech z $T$
 			\begin{itemize}
 				\item díky setříděnosti jich bude právě $2^{c - 1}$
 				\item každé slovo o tolik bitů zkrátíme
 				\item zapamatujeme si pozice změn v $T$
 			\end{itemize}
-				\vfill
 			\item dohromady $nw - n(w - (c + 1)) = n(c + 1) = nc + n$
-			\begin{itemize}
-				\item omezení: $n \ge 2^{c - 1}w$, abychom mohli uložit pozice
-			\end{itemize}
 		\end{itemize}
 
 		\fitimage[komprimovaná reprezentace $\mathcal{T}$]{images/compression.png}
