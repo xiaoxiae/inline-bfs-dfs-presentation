@@ -407,8 +407,8 @@
 			D = ColorChoiceDictionary(WHITE, LIGHT, DARK, BLACK)
 			D.setColor(start, LIGHT)
 
-			while choice(LIGHT) is not None:
-				while choice(LIGHT) is not None:
+			while D.choice(LIGHT) is not None:
+				while D.choice(LIGHT) is not None:
 					v = D.choice(LIGHT)  # pop node
 
 					# open all white neighbours

@@ -11,7 +11,7 @@ m = A[n + 1]
 
 
 def pprint():
-    """Hezký výpis stavu grafu. Ne, na tuhle část kódu fakt pyšný nejsem."""
+    """Hezký výpis stavu grafu."""
     print(
         "|  n |"
         + "T".center(n * 5 - 1)
@@ -36,11 +36,6 @@ def pointer_to_swapped():
     for v in range(1, n + 1):
         if v != T[v]:  # special case pro stupeň 0
             A[T[v]], T[v] = v, A[T[v]]
-
-
-def swapped_to_sorted():
-    """Převede prohozenou na setříděnou."""
-    # TODO do budoucna
 
 
 # setříděná -> prohozená
@@ -76,14 +71,14 @@ def restore():
 def visit(p):
     """Navštiv vrchol s polem sousednosti začínajícím na pozici p."""
     preprocess(A[p])  # vstoupili jsme do vrcholu
-    nextNeighbor(p, False)  # iterujeme přes sousedy
+    nextNeighbor(p, True)  # iterujeme přes sousedy
 
 
 def nextNeighbor(p, is_first):
     """Hlavní logika přecházení z vrcholu do vrcholu. is_first zamezuje přístupu k
     neexistujícímu indexu (p >= n + m + 2)."""
     # pokud je to první vrchol
-    if not is_first and A[p] <= n:
+    if is_first and A[p] <= n:
         v = A[p]
         p += 1
 
@@ -144,7 +139,7 @@ def follow(p):
         visit(q)
     else:
         print(f"- {A[A[p]]} již navštívena")
-        nextNeighbor(p + 1, True)
+        nextNeighbor(p + 1, False)
 
 
 def backtrack(q):
@@ -158,7 +153,7 @@ def backtrack(q):
 
     # zpracovali jsme všechny sousedy, tak se vracíme
     postprocess(v)
-    nextNeighbor(p + 1, True)
+    nextNeighbor(p + 1, False)
 
 
 # start DFS from vertex 3
